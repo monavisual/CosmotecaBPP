@@ -1,0 +1,287 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); }
+
+.wrap { max-width: 580px; margin: 0 auto; padding: 2rem 1rem; }
+
+.header { text-align: center; margin-bottom: 2rem; }
+.logo-circle { width: 52px; height: 52px; border-radius: 50%; background: #E6F1FB; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; }
+.logo-circle i { font-size: 26px; color: #185FA5; }
+.header h1 { font-size: 20px; font-weight: 500; color: var(--color-text-primary); line-height: 1.3; }
+.header p { font-size: 14px; color: var(--color-text-secondary); margin-top: 6px; }
+
+.step-bar { display: flex; align-items: center; margin-bottom: 2rem; }
+.step-dot { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; flex-shrink: 0; transition: all 0.25s; }
+.step-dot.done { background: #185FA5; color: #fff; }
+.step-dot.active { background: #185FA5; color: #fff; box-shadow: 0 0 0 4px #B5D4F4; }
+.step-dot.todo { background: var(--color-background-secondary); color: var(--color-text-tertiary); border: 0.5px solid var(--color-border-tertiary); }
+.step-line { flex: 1; height: 1px; background: var(--color-border-tertiary); margin: 0 6px; }
+.step-line.done { background: #185FA5; }
+.step-label { font-size: 11px; color: var(--color-text-secondary); text-align: center; margin-top: 4px; }
+.steps-wrap { display: flex; flex-direction: column; margin-bottom: 1.5rem; }
+.steps-row { display: flex; align-items: center; }
+.steps-labels { display: flex; justify-content: space-between; padding: 4px 0 0; }
+.steps-labels span { font-size: 11px; color: var(--color-text-secondary); width: 80px; text-align: center; }
+.steps-labels span:first-child { text-align: left; }
+.steps-labels span:last-child { text-align: right; }
+
+.card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.5rem; }
+
+.question { font-size: 16px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 1rem; line-height: 1.4; }
+
+.options { display: flex; flex-direction: column; gap: 10px; }
+
+.opt-btn { display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); cursor: pointer; text-align: left; transition: border-color 0.15s, background 0.15s; width: 100%; }
+.opt-btn:hover { border-color: var(--color-border-secondary); background: var(--color-background-secondary); }
+.opt-btn.selected { border-color: #378ADD; background: #E6F1FB; }
+.opt-btn i { font-size: 20px; color: var(--color-text-secondary); flex-shrink: 0; margin-top: 1px; }
+.opt-btn.selected i { color: #185FA5; }
+.opt-btn-text strong { display: block; font-size: 14px; font-weight: 500; color: var(--color-text-primary); }
+.opt-btn-text span { font-size: 13px; color: var(--color-text-secondary); margin-top: 2px; display: block; }
+
+.action-area { margin-top: 1.25rem; }
+
+.info-box { background: #E6F1FB; border: 0.5px solid #B5D4F4; border-radius: var(--border-radius-md); padding: 1rem 1.25rem; margin-top: 1.25rem; }
+.info-box p { font-size: 14px; color: #0C447C; line-height: 1.5; }
+.info-box a { color: #185FA5; font-weight: 500; text-decoration: none; }
+.info-box a:hover { text-decoration: underline; }
+
+.input-group { margin-bottom: 1rem; }
+.input-group label { display: block; font-size: 13px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 6px; }
+.input-group input, .input-group select { width: 100%; padding: 8px 12px; font-size: 14px; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); background: var(--color-background-primary); color: var(--color-text-primary); font-family: var(--font-sans); }
+.input-group input:focus, .input-group select:focus { outline: none; border-color: #378ADD; box-shadow: 0 0 0 3px #B5D4F430; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.check-label { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--color-text-secondary); cursor: pointer; margin-top: 0.5rem; line-height: 1.5; }
+.check-label input { margin-top: 2px; flex-shrink: 0; accent-color: #185FA5; }
+
+.btn-primary { display: block; width: 100%; padding: 12px; background: #185FA5; color: #fff; border: none; border-radius: var(--border-radius-md); font-size: 15px; font-weight: 500; cursor: pointer; margin-top: 1.25rem; font-family: var(--font-sans); transition: background 0.15s; }
+.btn-primary:hover { background: #0C447C; }
+.btn-primary:disabled { background: var(--color-background-secondary); color: var(--color-text-tertiary); border: 0.5px solid var(--color-border-tertiary); cursor: not-allowed; }
+
+.btn-back { background: none; border: none; color: var(--color-text-secondary); font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; font-family: var(--font-sans); margin-bottom: 1rem; padding: 0; }
+.btn-back:hover { color: var(--color-text-primary); }
+
+.success-box { text-align: center; padding: 2rem 1rem; }
+.success-icon { width: 56px; height: 56px; border-radius: 50%; background: #EAF3DE; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; }
+.success-icon i { font-size: 28px; color: #3B6D11; }
+.success-box h2 { font-size: 18px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 8px; }
+.success-box p { font-size: 14px; color: var(--color-text-secondary); line-height: 1.6; }
+
+.section-title { font-size: 13px; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 1rem; padding-bottom: 8px; border-bottom: 0.5px solid var(--color-border-tertiary); }
+
+.opac-form { margin-top: 1rem; }
+.opac-form .input-group { margin-bottom: 0.75rem; }
+.opac-link { font-size: 13px; color: #185FA5; display: inline-flex; align-items: center; gap: 4px; margin-top: 0.5rem; text-decoration: none; }
+.opac-link:hover { text-decoration: underline; }
+</style>
+
+<h2 class="sr-only">Formulario de afiliación a la Biblioteca Pública Piloto de Medellín</h2>
+
+<div class="wrap">
+  <div class="header">
+    <div class="logo-circle"><i class="ti ti-books" aria-hidden="true"></i></div>
+    <h1>Biblioteca Pública Piloto<br>de Medellín</h1>
+    <p>Acceso a Libby y servicios digitales</p>
+  </div>
+
+  <div class="steps-wrap">
+    <div class="steps-row">
+      <div class="step-dot active" id="dot1">1</div>
+      <div class="step-line" id="line1"></div>
+      <div class="step-dot todo" id="dot2">2</div>
+      <div class="step-line" id="line2"></div>
+      <div class="step-dot todo" id="dot3"><i class="ti ti-check" style="font-size:14px"></i></div>
+    </div>
+    <div class="steps-labels">
+      <span>Verificación</span>
+      <span>Registro</span>
+      <span>Listo</span>
+    </div>
+  </div>
+
+  <div id="view-validation" class="card">
+    <p class="question">¿Eres usuario de la Biblioteca Pública Piloto o el Sistema de Bibliotecas Públicas de Medellín?</p>
+    <div class="options">
+      <button class="opt-btn" id="opt-norecuerdo" onclick="selectOpt('norecuerdo')">
+        <i class="ti ti-help-circle" aria-hidden="true"></i>
+        <div class="opt-btn-text">
+          <strong>No estoy seguro o no recuerdo mis datos</strong>
+          <span>Puedo consultar mi cuenta en el catálogo OPAC</span>
+        </div>
+      </button>
+      <button class="opt-btn" id="opt-si" onclick="selectOpt('si')">
+        <i class="ti ti-circle-check" aria-hidden="true"></i>
+        <div class="opt-btn-text">
+          <strong>Sí, soy usuario afiliado</strong>
+          <span>Tengo número de cuenta o tarjeta de biblioteca</span>
+        </div>
+      </button>
+      <button class="opt-btn" id="opt-noinscrito" onclick="selectOpt('noinscrito')">
+        <i class="ti ti-user-plus" aria-hidden="true"></i>
+        <div class="opt-btn-text">
+          <strong>No estoy inscrito</strong>
+          <span>Quiero crear mi usuario y tarjeta para Libby</span>
+        </div>
+      </button>
+    </div>
+
+    <div class="action-area" id="action-norecuerdo" style="display:none">
+      <div class="info-box">
+        <p><i class="ti ti-info-circle" aria-hidden="true" style="vertical-align:-2px; margin-right:6px"></i>Puedes verificar tu afiliación en el catálogo OPAC. Ingresa tu número de cuenta y correo electrónico para confirmar si estás registrado.</p>
+        <p style="margin-top:10px"><strong>Acceder al catálogo OPAC:</strong></p>
+        <div class="opac-form">
+          <div class="input-group">
+            <label for="opac-cuenta">Número de cuenta</label>
+            <input type="text" id="opac-cuenta" placeholder="Ej. 0012345678">
+          </div>
+          <div class="input-group">
+            <label for="opac-correo">Correo electrónico</label>
+            <input type="email" id="opac-correo" placeholder="tucorreo@ejemplo.com">
+          </div>
+          <a href="https://opac.bpp.gov.co" class="opac-link" target="_blank"><i class="ti ti-external-link" style="font-size:14px" aria-hidden="true"></i>Ir al catálogo OPAC directamente</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="action-area" id="action-si" style="display:none">
+      <div class="info-box">
+        <p><i class="ti ti-device-mobile" aria-hidden="true" style="vertical-align:-2px; margin-right:6px"></i>¡Perfecto! Descarga Libby en tu dispositivo e inicia sesión con tu tarjeta de biblioteca.</p>
+        <p style="margin-top:10px"><a href="https://play.google.com/store/apps/details?id=com.overdrive.mobile.android.libby" target="_blank">Descargar Libby en Google Play ↗</a></p>
+        <p style="margin-top:6px"><a href="https://apps.apple.com/app/libby-by-overdrive/id1076402606" target="_blank">Descargar Libby en App Store ↗</a></p>
+      </div>
+    </div>
+
+    <div class="action-area" id="action-noinscrito" style="display:none">
+      <button class="btn-primary" onclick="goToStep2()">Continuar con el registro <i class="ti ti-arrow-right" aria-hidden="true" style="font-size:14px;vertical-align:-1px;margin-left:4px"></i></button>
+    </div>
+  </div>
+
+  <div id="view-registro" class="card" style="display:none">
+    <button class="btn-back" onclick="goToStep1()"><i class="ti ti-arrow-left" aria-hidden="true" style="font-size:14px"></i> Volver</button>
+    <p class="section-title">Etapa 2 — Datos personales</p>
+    <p style="font-size:14px; color:var(--color-text-secondary); margin-bottom:1.25rem; line-height:1.5;">Para crear tu usuario y obtener una tarjeta de biblioteca para Libby, diligencia los siguientes campos.</p>
+
+    <div class="input-group">
+      <label for="r-id"># Identificación</label>
+      <input type="text" id="r-id" placeholder="Número de cédula o documento">
+    </div>
+    <div class="two-col">
+      <div class="input-group">
+        <label for="r-nombres">Nombres</label>
+        <input type="text" id="r-nombres" placeholder="Como en tu documento">
+      </div>
+      <div class="input-group">
+        <label for="r-apellidos">Apellidos</label>
+        <input type="text" id="r-apellidos" placeholder="Como en tu documento">
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="input-group">
+        <label for="r-nacimiento">Fecha de nacimiento</label>
+        <input type="date" id="r-nacimiento">
+      </div>
+      <div class="input-group">
+        <label for="r-genero">Género</label>
+        <select id="r-genero">
+          <option value="">Selecciona</option>
+          <option>Mujer</option>
+          <option>Hombre</option>
+          <option>No binario</option>
+          <option>Prefiero no decir</option>
+        </select>
+      </div>
+    </div>
+    <div class="input-group">
+      <label for="r-correo">Correo electrónico</label>
+      <input type="email" id="r-correo" placeholder="tucorreo@ejemplo.com">
+    </div>
+
+    <label class="check-label" for="r-tratamiento">
+      <input type="checkbox" id="r-tratamiento" onchange="checkForm()">
+      <span>Acepto el <a href="#" style="color:#185FA5">tratamiento de datos personales</a> conforme a la política de privacidad de la Biblioteca Pública Piloto de Medellín.</span>
+    </label>
+
+    <button class="btn-primary" id="btn-enviar" onclick="goToStep3()" disabled>Crear mi usuario</button>
+  </div>
+
+  <div id="view-exito" class="card" style="display:none">
+    <div class="success-box">
+      <div class="success-icon"><i class="ti ti-check" aria-hidden="true"></i></div>
+      <h2>¡Registro completado!</h2>
+      <p>Tu cuenta ha sido creada. Recibirás un correo con los pasos para activar tu tarjeta de biblioteca y comenzar a usar Libby.</p>
+      <p style="margin-top:12px"><a href="https://play.google.com/store/apps/details?id=com.overdrive.mobile.android.libby" target="_blank" style="color:#185FA5;font-weight:500">Descargar Libby ↗</a></p>
+    </div>
+  </div>
+</div>
+
+<script>
+var selected = null;
+
+function selectOpt(id) {
+  selected = id;
+  ['norecuerdo','si','noinscrito'].forEach(function(k){
+    var btn = document.getElementById('opt-'+k);
+    var act = document.getElementById('action-'+k);
+    btn.classList.remove('selected');
+    act.style.display = 'none';
+  });
+  document.getElementById('opt-'+id).classList.add('selected');
+  document.getElementById('action-'+id).style.display = 'block';
+}
+
+function setStep(n) {
+  [1,2,3].forEach(function(i){
+    var dot = document.getElementById('dot'+i);
+    if(!dot) return;
+    dot.classList.remove('active','done','todo');
+    if(i < n) dot.classList.add('done');
+    else if(i === n) dot.classList.add('active');
+    else dot.classList.add('todo');
+  });
+  [1,2].forEach(function(i){
+    var line = document.getElementById('line'+i);
+    if(!line) return;
+    line.classList.remove('done');
+    if(i < n) line.classList.add('done');
+  });
+}
+
+function goToStep2() {
+  document.getElementById('view-validation').style.display = 'none';
+  document.getElementById('view-registro').style.display = 'block';
+  setStep(2);
+}
+
+function goToStep1() {
+  document.getElementById('view-registro').style.display = 'none';
+  document.getElementById('view-validation').style.display = 'block';
+  setStep(1);
+}
+
+function goToStep3() {
+  document.getElementById('view-registro').style.display = 'none';
+  document.getElementById('view-exito').style.display = 'block';
+  setStep(3);
+  var dot3 = document.getElementById('dot3');
+  dot3.classList.remove('todo','active');
+  dot3.classList.add('done');
+}
+
+function checkForm() {
+  var filled = document.getElementById('r-id').value &&
+    document.getElementById('r-nombres').value &&
+    document.getElementById('r-apellidos').value &&
+    document.getElementById('r-nacimiento').value &&
+    document.getElementById('r-genero').value &&
+    document.getElementById('r-correo').value &&
+    document.getElementById('r-tratamiento').checked;
+  document.getElementById('btn-enviar').disabled = !filled;
+}
+
+['r-id','r-nombres','r-apellidos','r-nacimiento','r-genero','r-correo'].forEach(function(id){
+  var el = document.getElementById(id);
+  if(el) el.addEventListener('input', checkForm);
+});
+</script>
